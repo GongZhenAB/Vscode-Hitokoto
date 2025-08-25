@@ -4,7 +4,7 @@
   "publisher": "GongZhenAB",
   "description": "在状态栏显示随机一言",
   "icon": "logo.png",
-  "version": "1.0.0",
+  "version": "1.1.0",
   "engines": {
     "vscode": "^1.29.0"
   },
@@ -86,6 +86,11 @@
           "default": [],
           "description": "句子类型"
         },
+        "hitokoto.maxLength": {
+          "type": "string",
+          "default": "15",
+          "description": "长度限制"
+        },
         "hitokoto.refreshInterval": {
           "type": "string",
           "enum": [
@@ -106,6 +111,24 @@
           ],
           "default": "10",
           "description": "刷新频率"
+        },
+        "hitokoto.alignment": {
+          "type": "string",
+          "enum": [
+            "1",
+            "2"
+          ],
+          "enumDescriptions": [
+            "左对齐",
+            "右对齐"
+          ],
+          "default": "2",
+          "description": "对齐方式"
+        },
+        "hitokoto.priority": {
+          "type": "number",
+          "default": 100,
+          "description": "位置优先级"
         }
       }
     },

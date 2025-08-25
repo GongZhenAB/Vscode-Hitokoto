@@ -60,6 +60,7 @@ function activate(context) {
 
     vscode.workspace.onDidChangeConfiguration(() => {
         createInterval(hitokoto);
+        setPosition();
     });
 }
 
@@ -79,6 +80,18 @@ function createInterval(hitokoto) {
     }
 }
 
+function setPosition() {
+    const alignment = vscode.workspace
+        .getConfiguration()
+        .get("hitokoto.alignment");
+    const priority = vscode.workspace
+        .getConfiguration()
+        .get("hitokoto.priority");
+
+    hitokotoText = vscode.window.createStatusBarItem(alignment, priority);
+    hitokotoBtn = vscode.window.createStatusBarItem(alignment, priority);
+}
+
 /**
  * create a hitokoto barItem
  * @param {object} hitokoto
@@ -88,11 +101,11 @@ function getHitokoto(hitokoto) {
     const selectedTypes = vscode.workspace
         .getConfiguration()
         .get("hitokoto.types");
-    const typeParam =
-        selectedTypes && selectedTypes.length > 0
-            ? `c=${selectedTypes.join(",")}`
-            : "";
-    const api = typeParam ? `${apiUrl}?${typeParam}` : apiUrl;
+    const maxLen = vscode.workspace
+        .getConfiguration()
+        .get("hitokoto.maxLength");
+    const params = `c=${selectedTypes.join(",")}&max_length=${maxLen}`;
+    const api = `${apiUrl}?${params}`;
     axios
         .get(api)
         .then((res) => {
@@ -112,11 +125,18 @@ function getHitokoto(hitokoto) {
 }
 
 function createHitokoto(hitokoto) {
-    hitokotoText = vscode.window.createStatusBarItem(2, 100);
+    const alignment = vscode.workspace
+        .getConfiguration()
+        .get("hitokoto.alignment");
+    const priority = vscode.workspace
+        .getConfiguration()
+        .get("hitokoto.priority");
+
+    hitokotoText = vscode.window.createStatusBarItem(alignment, priority);
     hitokotoText.text = "获取一言中...";
     hitokotoText.show();
 
-    hitokotoBtn = vscode.window.createStatusBarItem(2, 100);
+    hitokotoBtn = vscode.window.createStatusBarItem(alignment, priority);
     hitokotoBtn.text = `$(refresh)`;
     hitokotoBtn.tooltip = "刷新一言";
     hitokotoBtn.command = "extension.hitokoto";
